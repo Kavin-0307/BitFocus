@@ -2,15 +2,19 @@
   "tasks": [
     {
       "id": "study",
-      "aliases": ["study", "learn"]
+      "aliases": ["study", "learn", "understand", "read", "lecture"]
     },
     {
       "id": "revision",
-      "aliases": ["revise", "review"]
+      "aliases": ["revise", "review", "exam prep", "practice"]
     },
     {
       "id": "assignment",
-      "aliases": ["assignment", "project"]
+      "aliases": ["assignment", "project", "homework", "lab", "coding", "build"]
+    },
+    {
+      "id": "reading",
+      "aliases": ["read", "textbook", "paper", "documentation"]
     }
   ]
 }

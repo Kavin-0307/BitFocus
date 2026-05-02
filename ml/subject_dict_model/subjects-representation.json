@@ -7,27 +7,35 @@
         "operating systems",
         "os scheduling",
         "cpu scheduling",
-        "process scheduling",
         "dbms",
-        "database systems",
         "computer networks",
-        "cn"
+        "networks",
+        "operating system",
+        "database management"
+      ]
+    },
+    {
+      "id": "programming",
+      "aliases": [
+        "java",
+        "python",
+        "javascript",
+        "coding",
+        "programming",
+        "development",
+        "backend",
+        "frontend"
       ]
     },
     {
       "id": "math",
       "aliases": [
-        "algebra",
         "calculus",
-        "statistics"
-      ]
-    },
-    {
-      "id": "general",
-      "aliases": [
-        "study",
-        "read",
-        "revise"
+        "algebra",
+        "linear algebra",
+        "probability",
+        "statistics",
+        "mathematics"
       ]
     }
   ]
