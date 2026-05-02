@@ -6,6 +6,7 @@ import java.util.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.bitfocus.backend.ml.dtos.TaskAnalysisResponse;
 import com.bitfocus.backend.task.Task;
 
 @Service
@@ -16,24 +17,51 @@ public class MLIntegrationService {
 	 public MLIntegrationService() {
 	        this.restTemplate = new RestTemplate();
 	    }
-	 public Map<String,Object> analyzeTask(String text){
-		 Map<String,String> request=new HashMap<>();
-		 request.put("text", text);
-		 try {
-			 System.out.println("ML CALL → analyzeTask: " + text);
-			 return restTemplate.postForObject(ANALYZE_URL,request,Map.class);
-		 }catch (Exception e) {
-	            // fallback
-	            Map<String, Object> fallback = new HashMap<>();
-	            fallback.put("topic", "general");
-	            fallback.put("type", "general");
-	            fallback.put("difficulty", "MEDIUM");
-	            fallback.put("estimatedPomodoros", 2);
-	            return fallback;
-	        }
-		 
-		 
-	 }
+	 public TaskAnalysisResponse analyzeTask(String text) {
+
+		    Map<String, String> request = new HashMap<>();
+		    request.put("text", text);
+
+		    try {
+		        System.out.println("ML CALL → analyzeTask: " + text);
+
+		        Map<String, Object> response =
+		                restTemplate.postForObject(ANALYZE_URL, request, Map.class);
+
+		        // ---- SAFE MAPPING ----
+		        Integer estimated = 2;
+
+		        if (response != null) {
+		            Object val = response.get("estimatedPomodoros");
+		            if (val instanceof Number) {
+		                estimated = ((Number) val).intValue();
+		            }
+		        }
+
+		        String topic = response != null ? (String) response.get("topic") : null;
+		        String type = response != null ? (String) response.get("type") : null;
+		        String difficulty = response != null ? (String) response.get("difficulty") : null;
+
+		        TaskAnalysisResponse result =
+		                new TaskAnalysisResponse(estimated, topic, type, difficulty);
+
+		        System.out.println("ML RESPONSE → " + result);
+
+		        return result;
+
+		    } catch (Exception e) {
+
+		        System.out.println("ML FAILED → using fallback");
+
+		        // ---- FALLBACK (NEVER NULL) ----
+		        return new TaskAnalysisResponse(
+		                2,
+		                "general",
+		                "general",
+		                "MEDIUM"
+		        );
+		    }
+		}
 	    public Map<String, Object> recommendTasks(List<Task> tasks) {
 
 	        List<Map<String, Object>> taskList = new ArrayList<>();

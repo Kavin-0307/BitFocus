@@ -30,7 +30,14 @@ public class Task {
 	private int maxHP;
 	@Column(name="task_current_hp")
 	private int currentHP;
-	
+	 @Column(name="task_topic")
+	    private String topic;
+
+	    @Column(name="task_type")
+	    private String type;
+
+	    @Column(name="task_difficulty")
+	    private String difficulty;
 	@PrePersist
 	public void prePersist() {
 		this.createdAt=LocalDateTime.now();
@@ -39,7 +46,18 @@ public class Task {
 		this.maxHP = this.estimatedPomodoros * 100;
 		this.currentHP = this.maxHP;
 	}
-	
+	public String getTopic() {
+        return topic;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
 	public TaskCompletion getTaskStatus() {
 		return taskStatus;
 	}
@@ -92,7 +110,22 @@ public class Task {
 	public boolean isCompleted() {
 	    return this.taskStatus == TaskCompletion.COMPLETED;
 	}
-	
+	public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+    
+    
+    
+    
+    
 	public int getMaxHP() {
 	    return this.maxHP;
 	}

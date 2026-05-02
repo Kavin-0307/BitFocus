@@ -30,11 +30,16 @@ public class TaskService {
 		if (request.getEstimatedPomodoros() > 0) {
 		    estimated = request.getEstimatedPomodoros();
 		} else {
-		    Map<String, Object> ml = mlService.analyzeTask(request.getTaskTitle());
-		    estimated = (int) ml.get("estimatedPomodoros");
+			 var ml = mlService.analyzeTask(request.getTaskTitle());
+
+	            // ❗ SAFE extraction
+	            estimated = (ml.estimatedPomodoros() != null)
+	                    ? ml.estimatedPomodoros()
+	                    : 2;
+	            
 		}
 
-		task.setEstimatedPomodoros(estimated);
+		
 		task.setEstimatedPomodoros(estimated);
 		task.setTaskDeadline(request.getTaskDeadline());
 		Task savedTask = taskRepository.save(task);
