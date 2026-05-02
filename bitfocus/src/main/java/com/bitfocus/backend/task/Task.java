@@ -118,5 +118,10 @@ public class Task {
 		if(this.currentHP==0)
 			this.taskStatus=TaskCompletion.COMPLETED;
 	}
+
+	public LocalDateTime getCreatedAt() {
+		
+		return createdAt;
+	}
 	
 }
