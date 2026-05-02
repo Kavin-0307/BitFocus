@@ -21,6 +21,9 @@ BitFocus is a **full-stack productivity application** that transforms your work 
 
 ---
 
+## Launching
+- Simply run "Launch.bat" file to launch the integrated server
+
 ## Architecture
 
 ```
