@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BitFocus ⚔️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Orbitron:wght@400;700;900&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+  <!-- Particle canvas background -->
+  <canvas id="particles"></canvas>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="logo">
+      <div class="logo-sword">⚔️</div>
+      <span class="logo-text">BitFocus</span>
+    </div>
+    <div class="header-center">
+      <div class="pomo-cycle-display">
+        Cycle <span id="cycle-display">1</span> of 4
+        <div class="cycle-dots">
+          <span class="cycle-dot" id="cd0"></span>
+          <span class="cycle-dot" id="cd1"></span>
+          <span class="cycle-dot" id="cd2"></span>
+          <span class="cycle-dot" id="cd3"></span>
+        </div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="streak-badge">
+        <span class="streak-fire">🔥</span>
+        <span id="streak-count">0</span>
+        <span class="streak-label">streak</span>
+      </div>
+      <div class="level-xp">
+        <div class="level-tag">LVL <span id="player-level">1</span></div>
+        <div class="xp-track">
+          <div class="xp-fill" id="xp-fill"></div>
+        </div>
+        <div class="xp-nums"><span id="xp-now">0</span>/<span id="xp-next">500</span> XP</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MAIN LAYOUT ===== -->
+  <main class="layout">
+
+    <!-- ===== LEFT PANEL ===== -->
+    <aside class="panel left-panel">
+
+      <div class="panel-hdr">
+        <h2 class="panel-title"><span class="title-icon">📋</span> Quest Log</h2>
+        <button class="add-btn" onclick="openTaskModal()">＋ Add</button>
+      </div>
+
+      <div id="task-list">
+        <div class="empty-state" id="empty-tasks">
+          <div class="empty-icon">🗡️</div>
+          <p>No quests yet.</p>
+          <p class="empty-sub">Add a quest to begin your adventure!</p>
+        </div>
+      </div>
+
+      <!-- Calendar -->
+      <div class="section-divider"></div>
+      <div class="panel-hdr">
+        <h2 class="panel-title"><span class="title-icon">📅</span> Activity Map</h2>
+      </div>
+      <div class="calendar-month-label" id="cal-month"></div>
+      <div class="calendar-grid" id="calendar-grid"></div>
+      <div class="cal-legend">
+        <div class="cal-legend-item"><span class="cal-dot d0"></span>None</div>
+        <div class="cal-legend-item"><span class="cal-dot d1"></span>Low</div>
+        <div class="cal-legend-item"><span class="cal-dot d2"></span>Mid</div>
+        <div class="cal-legend-item"><span class="cal-dot d3"></span>High</div>
+      </div>
+
+    </aside>
+
+    <!-- ===== CENTER PANEL ===== -->
+    <section class="panel center-panel">
+
+      <!-- Mode tabs -->
+      <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="focus" onclick="switchMode('focus',this)">⚔️ Focus</button>
+        <button class="mode-tab" data-mode="short" onclick="switchMode('short',this)">☕ Short Break</button>
+        <button class="mode-tab" data-mode="long" onclick="switchMode('long',this)">🛌 Long Break</button>
+      </div>
+
+      <!-- Active quest banner -->
+      <div class="active-quest-banner" id="active-quest-banner">
+        <span class="aq-label">Active Quest</span>
+        <span class="aq-name" id="aq-name">Select a quest to begin your battle</span>
+      </div>
+
+      <!-- Boss battle area -->
+      <div class="boss-arena" id="boss-arena">
+        <div class="boss-label" id="boss-label">⚠ ENEMY AWAITS</div>
+        <div class="boss-sprite-wrap" id="boss-sprite-wrap">
+          <div class="boss-aura" id="boss-aura"></div>
+          <div class="boss-emoji" id="boss-emoji">👹</div>
+          <div class="boss-shadow"></div>
+        </div>
+        <div class="boss-hp-wrap">
+          <div class="boss-hp-labels">
+            <span id="boss-name-label">FOCUS DEMON</span>
+            <span id="boss-hp-text">● ● ● ● ●</span>
+          </div>
+          <div class="boss-hp-track">
+            <div class="boss-hp-bar" id="boss-hp-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timer ring -->
+      <div class="timer-wrap">
+        <svg class="timer-svg" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="ring-glow">
+              <feGaussianBlur stdDeviation="6" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <linearGradient id="ring-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#7c3aed"/>
+              <stop offset="100%" stop-color="#f59e0b"/>
+            </linearGradient>
+          </defs>
+          <!-- Tick marks -->
+          <g id="tick-marks"></g>
+          <!-- Background ring -->
+          <circle class="ring-track" cx="160" cy="160" r="140"/>
+          <!-- Animated progress ring -->
+          <circle class="ring-prog" id="ring-prog" cx="160" cy="160" r="140" filter="url(#ring-glow)"/>
+          <!-- Small dot at progress head -->
+          <circle class="ring-dot" id="ring-dot" cx="160" cy="20" r="7"/>
+        </svg>
+        <div class="timer-inner">
+          <div class="session-type-label" id="session-type-label">FOCUS SESSION</div>
+          <div class="timer-digits" id="timer">25:00</div>
+          <div class="session-counter">Session <span id="session-num">1</span>/4</div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <button class="ctrl-btn sec" onclick="resetTimer()" title="Reset">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+        <button class="ctrl-btn prime" id="playpause-btn" onclick="toggleTimer()">
+          <svg class="ico-play" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+          <svg class="ico-pause hidden" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        </button>
+        <button class="ctrl-btn sec" onclick="skipSession()" title="Skip session">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5,4 15,12 5,20"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+        </button>
+      </div>
+
+      <!-- Pomo dots -->
+      <div class="pomo-dots">
+        <div class="pomo-dot" id="pd0"></div>
+        <div class="pomo-dot" id="pd1"></div>
+        <div class="pomo-dot" id="pd2"></div>
+        <div class="pomo-dot" id="pd3"></div>
+      </div>
+
+    </section>
+
+    <!-- ===== RIGHT PANEL ===== -->
+    <aside class="panel right-panel">
+
+      <div class="panel-hdr">
+        <h2 class="panel-title"><span class="title-icon">📊</span> Battle Stats</h2>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card" id="sc-sessions">
+          <div class="stat-ico">⚔️</div>
+          <div class="stat-val" id="s-sessions">0</div>
+          <div class="stat-lbl">Sessions</div>
+        </div>
+        <div class="stat-card" id="sc-time">
+          <div class="stat-ico">⏱️</div>
+          <div class="stat-val" id="s-time">0m</div>
+          <div class="stat-lbl">Focus Time</div>
+        </div>
+        <div class="stat-card" id="sc-quests">
+          <div class="stat-ico">💀</div>
+          <div class="stat-val" id="s-quests">0</div>
+          <div class="stat-lbl">Defeated</div>
+        </div>
+        <div class="stat-card" id="sc-score">
+          <div class="stat-ico">⭐</div>
+          <div class="stat-val" id="s-score">0</div>
+          <div class="stat-lbl">Power Pts</div>
+        </div>
+      </div>
+
+      <!-- Productivity Ring -->
+      <div class="section-divider"></div>
+      <div class="panel-hdr">
+        <h2 class="panel-title"><span class="title-icon">🏆</span> Rank</h2>
+      </div>
+
+      <div class="prod-ring-wrap">
+        <svg class="prod-svg" viewBox="0 0 140 140">
+          <circle class="prod-track" cx="70" cy="70" r="56"/>
+          <circle class="prod-prog" id="prod-prog" cx="70" cy="70" r="56"/>
+          <text class="prod-pct" id="prod-pct" x="70" y="75">0%</text>
+        </svg>
+        <div class="rank-label" id="rank-label">Rookie Hero</div>
+      </div>
+
+      <!-- Energy tracker -->
+      <div class="section-divider"></div>
+      <div class="panel-hdr">
+        <h2 class="panel-title"><span class="title-icon">⚡</span> Energy</h2>
+      </div>
+      <div class="energy-section">
+        <div class="energy-row" id="energy-row">
+          <button class="e-btn" onclick="setEnergy(1)" title="Drained">😴</button>
+          <button class="e-btn" onclick="setEnergy(2)" title="Low">😐</button>
+          <button class="e-btn" onclick="setEnergy(3)" title="Okay">😊</button>
+          <button class="e-btn" onclick="setEnergy(4)" title="Pumped">🔥</button>
+          <button class="e-btn" onclick="setEnergy(5)" title="Unstoppable">⚡</button>
+        </div>
+        <div class="energy-track">
+          <div class="energy-fill" id="energy-fill"></div>
+        </div>
+        <div class="energy-label" id="energy-label">Rate your energy after a session</div>
+      </div>
+
+      <!-- Insights -->
+      <div class="section-divider"></div>
+      <div class="panel-hdr">
+        <h2 class="panel-title"><span class="title-icon">🧠</span> Insights</h2>
+      </div>
+      <div class="insights" id="insights">
+        <div class="insight-item">
+          <span class="ins-ico">💡</span>
+          <span>Complete a session to unlock insights.</span>
+        </div>
+      </div>
+
+    </aside>
+  </main>
+
+  <!-- ===== FLOATING DAMAGE LAYER ===== -->
+  <div id="dmg-layer"></div>
+
+  <!-- ===== SCREEN FLASH ===== -->
+  <div class="screen-flash" id="screen-flash"></div>
+
+  <!-- ===== TOAST POPUP ===== -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ===== TASK MODAL ===== -->
+  <div class="overlay hidden" id="task-modal-overlay" onclick="closeTaskModal(event)">
+    <div class="modal" id="task-modal">
+      <div class="modal-header">
+        <h3 class="modal-title">⚔️ New Quest</h3>
+        <button class="modal-close" onclick="closeTaskModal()">✕</button>
+      </div>
+      <div class="form-group">
+        <label class="form-lbl">Quest Name</label>
+        <input class="form-input" id="task-name-inp" placeholder="e.g. Conquer Chapter 5…" onkeydown="if(event.key==='Enter') addTask()"/>
+      </div>
+      <div class="form-group">
+        <label class="form-lbl">Priority</label>
+        <div class="priority-row">
+          <button class="pri-btn active" data-p="high" onclick="selectPriority('high',this)">🔥 High</button>
+          <button class="pri-btn" data-p="medium" onclick="selectPriority('medium',this)">⚡ Medium</button>
+          <button class="pri-btn" data-p="low" onclick="selectPriority('low',this)">🧊 Low</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-lbl">Estimated Pomodoros</label>
+        <div class="pomo-stepper">
+          <button class="step-btn" onclick="adjPomos(-1)">−</button>
+          <div class="pomo-count-display">
+            <span id="modal-pomo-count">2</span>
+            <span class="pomo-step-sub">sessions</span>
+          </div>
+          <button class="step-btn" onclick="adjPomos(1)">+</button>
+        </div>
+        <div class="pomo-preview" id="pomo-preview">
+          🍅 🍅
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn ghost" onclick="closeTaskModal()">Cancel</button>
+        <button class="modal-btn solid" onclick="addTask()">Begin Quest ⚔️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ENERGY MODAL ===== -->
+  <div class="overlay hidden" id="energy-modal-overlay">
+    <div class="modal energy-modal">
+      <div class="energy-modal-hdr">⚡ Energy Check</div>
+      <p class="energy-modal-sub">How's your energy after that session?</p>
+      <div class="energy-emoji-row">
+        <button class="ee-btn" onclick="setEnergyModal(1)">😴<span>Drained</span></button>
+        <button class="ee-btn" onclick="setEnergyModal(2)">😐<span>Low</span></button>
+        <button class="ee-btn" onclick="setEnergyModal(3)">😊<span>Okay</span></button>
+        <button class="ee-btn" onclick="setEnergyModal(4)">🔥<span>Pumped</span></button>
+        <button class="ee-btn" onclick="setEnergyModal(5)">⚡<span>Lightning</span></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
