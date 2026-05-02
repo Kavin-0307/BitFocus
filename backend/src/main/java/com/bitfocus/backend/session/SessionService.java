@@ -1,5 +1,6 @@
 package com.bitfocus.backend.session;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 import com.bitfocus.backend.game.GameService;
@@ -9,6 +10,7 @@ import com.bitfocus.backend.task.Task;
 import com.bitfocus.backend.task.TaskCompletion;
 import com.bitfocus.backend.task.TaskRepository;
 import com.bitfocus.backend.task.TaskService;
+import com.bitfocus.backend.task.dtos.TaskResponseDTO;
 public class SessionService {
 	private final SessionRepository sessionRepository;
 	private final TaskRepository taskRepository;
@@ -34,5 +36,20 @@ public class SessionService {
 
 	public TaskResponseDTO endSession(SessionEndRequestDTO request) {
 		Session session=sessionRepository.findById(request.getSessionId()).orElseThrow(()->new IllegalArgumentException("Session not found"));
+		if(session.getEndTime()!=null)
+			throw new IllegalStateException("Session already ended");
+		Task task=session.getTask();
+		
+		session.setEndTime(request.getEndTime());
+		session.setCompleted(request.isCompleted());
+		session.setInterruptionCount(request.getInterruptionCount());
+		session.setEnergyLevel(request.getEnergyLevel());
+		
+		long duration=Duration.between(session.getStartTime(), request.getEndTime()).getSeconds();
+		session.setDurationSeconds((int)duration);
+		sessionRepository.save(session);
+		int damage=gameService.calculateDamage(session);
+		Task updatedTask=gameService.applyDamage(task.getTaskId(),damage,session.isCompleted());
+		return taskService.getTaskById(updatedTask.getTaskId());
 	}
 }
