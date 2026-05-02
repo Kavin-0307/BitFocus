@@ -88,6 +88,19 @@ public class TaskService {
 				task.getCurrentHP(),
 				task.getTaskStatus(),
 				task.getCreatedAt());
+	}//Temp
+	public void simulatePomodoro(Long taskId, boolean completed) {
+
+	    Task task = taskRepository.findById(taskId)
+	            .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+
+	    task.applyPomodoro(completed);
+
+	    taskRepository.save(task);
+
+	    System.out.println("Remaining: " + task.getRemainingPomodoros());
+	    System.out.println("HP: " + task.getCurrentHP());
+	    System.out.println("Status: " + task.getTaskStatus());
 	}
 	
 	private int calculatePriorityScore(Task task) {

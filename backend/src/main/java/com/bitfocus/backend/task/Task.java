@@ -133,13 +133,20 @@ public class Task {
 		return this.currentHP;
 	}
 	public void applyPomodoro(boolean completed) {
+
 	    if (this.taskStatus == TaskCompletion.COMPLETED) return;
 
 	    if (completed && this.remainingPomodoros > 0) {
+
 	        this.remainingPomodoros--;
+
+	        int damage = getDamagePerSession();
+	        applyDamage(damage);
+
+	        System.out.println("Damage: " + damage + " | Difficulty: " + difficulty);
 	    }
 
-	    if (this.remainingPomodoros == 0) {
+	    if (this.remainingPomodoros == 0 || this.currentHP == 0) {
 	        this.taskStatus = TaskCompletion.COMPLETED;
 	    }
 	}
@@ -152,6 +159,33 @@ public class Task {
 	        this.currentHP = 0;
 	    }
 
+	}
+	public int getDamagePerSession() {
+		int base;
+		if(this.difficulty==null)
+			base=100;
+		else {
+			switch(this.difficulty.toUpperCase()) {
+			case "EASY":
+				base=110;
+				break;
+			case "HARD":
+				base=90;
+				break;
+			default:
+				base=100;
+			}
+			
+		}
+		double progressFactor=1.0;
+		if(this.estimatedPomodoros>0) {
+			progressFactor+=0.4*((double)this.remainingPomodoros/this.estimatedPomodoros);
+		}
+		int randomBoost=new java.util.Random().nextInt(21)-10;
+		int damage=(int)(base*progressFactor)+randomBoost;
+		if(damage<50)damage=50;
+		if(damage>175)damage=175;
+		return damage;
 	}
 
 	public LocalDateTime getCreatedAt() {
