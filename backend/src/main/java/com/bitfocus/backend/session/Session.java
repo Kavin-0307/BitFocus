@@ -17,18 +17,18 @@ public class Session {
 	
 	@Column(name="session_start_time",nullable=false)
 	private LocalDateTime startTime;
-	@Column(name="session_end_time",nullable=false)
+	@Column(name="session_end_time")
 	private LocalDateTime endTime;
-	
+	@Column(name="duration_seconds")
 	private int durationSeconds;
 	
 	@Column(name="session_completed",nullable=false)
 	private boolean completed;
 	
-	@Column(name="session_interruption_count",nullable=false)
+	@Column(name="session_interruption_count")
 	private int interruptionCount;
 	
-	@Column(name="energy_level",nullable=true)
+	@Column(name="energy_level")
 	private int energyLevel;
 	@Column(name = "pomodoro_applied")
 	private boolean pomodoroApplied = false;

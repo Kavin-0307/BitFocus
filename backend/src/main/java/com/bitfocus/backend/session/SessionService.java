@@ -3,6 +3,8 @@ package com.bitfocus.backend.session;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+import org.springframework.stereotype.Service;
+
 import com.bitfocus.backend.game.GameService;
 import com.bitfocus.backend.session.dtos.SessionEndRequestDTO;
 import com.bitfocus.backend.session.dtos.SessionStartRequestDTO;
@@ -13,6 +15,7 @@ import com.bitfocus.backend.task.TaskService;
 import com.bitfocus.backend.task.dtos.TaskResponseDTO;
 
 import jakarta.transaction.Transactional;
+@Service
 public class SessionService {
 	private final SessionRepository sessionRepository;
 	private final TaskRepository taskRepository;
