@@ -1,9 +1,11 @@
 package com.bitfocus.backend.task;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.bitfocus.backend.ml.MLIntegrationService;
 import com.bitfocus.backend.task.dtos.TaskRequestDTO;
 import com.bitfocus.backend.task.dtos.TaskResponseDTO;
 
@@ -12,14 +14,36 @@ import com.bitfocus.backend.task.dtos.TaskResponseDTO;
 @Service
 public class TaskService {
 	private final TaskRepository taskRepository;
-	public TaskService(TaskRepository taskRepository){
+	private final MLIntegrationService mlService;
+	public TaskService(TaskRepository taskRepository,MLIntegrationService mlService){
 		this.taskRepository=taskRepository;
+		this.mlService=mlService;
 	}
 	public TaskResponseDTO createTask(TaskRequestDTO request) {
 		Task task=new Task();
 		task.setTaskTitle(request.getTaskTitle());
 		task.setTaskPriority(request.getTaskPriority());
-		task.setEstimatedPomodoros(request.getEstimatedPomodoros());
+		
+		int estimated ;
+		
+		var ml = mlService.analyzeTask(request.getTaskTitle());
+		if (request.getEstimatedPomodoros() > 0) {
+		    estimated = request.getEstimatedPomodoros();
+		} else {
+			
+
+	            // ❗ SAFE extraction
+	            estimated = (ml.estimatedPomodoros() != null)
+	                    ? ml.estimatedPomodoros()
+	                    : 2;
+	            
+		}
+
+		task.setTopic(ml.topic());
+		task.setType(ml.type());
+		task.setDifficulty(ml.difficulty());
+		estimated = Math.max(estimated, 2);
+		task.setEstimatedPomodoros(estimated);
 		task.setTaskDeadline(request.getTaskDeadline());
 		Task savedTask = taskRepository.save(task);
 		return convertToResponseDTO(savedTask);
@@ -67,6 +91,19 @@ public class TaskService {
 				task.getCurrentHP(),
 				task.getTaskStatus(),
 				task.getCreatedAt());
+	}//Temp
+	public void simulatePomodoro(Long taskId, boolean completed) {
+
+	    Task task = taskRepository.findById(taskId)
+	            .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+
+	    task.applyPomodoro(completed);
+
+	    taskRepository.save(task);
+
+	    System.out.println("Remaining: " + task.getRemainingPomodoros());
+	    System.out.println("HP: " + task.getCurrentHP());
+	    System.out.println("Status: " + task.getTaskStatus());
 	}
 	
 	private int calculatePriorityScore(Task task) {
