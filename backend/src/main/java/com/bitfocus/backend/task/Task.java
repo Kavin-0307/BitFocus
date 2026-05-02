@@ -30,7 +30,14 @@ public class Task {
 	private int maxHP;
 	@Column(name="task_current_hp")
 	private int currentHP;
-	
+	 @Column(name="task_topic")
+	    private String topic;
+
+	    @Column(name="task_type")
+	    private String type;
+
+	    @Column(name="task_difficulty")
+	    private String difficulty;
 	@PrePersist
 	public void prePersist() {
 		this.createdAt=LocalDateTime.now();
@@ -39,7 +46,18 @@ public class Task {
 		this.maxHP = this.estimatedPomodoros * 100;
 		this.currentHP = this.maxHP;
 	}
-	
+	public String getTopic() {
+        return topic;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
 	public TaskCompletion getTaskStatus() {
 		return taskStatus;
 	}
@@ -92,7 +110,22 @@ public class Task {
 	public boolean isCompleted() {
 	    return this.taskStatus == TaskCompletion.COMPLETED;
 	}
-	
+	public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+    
+    
+    
+    
+    
 	public int getMaxHP() {
 	    return this.maxHP;
 	}
@@ -100,23 +133,59 @@ public class Task {
 		return this.currentHP;
 	}
 	public void applyPomodoro(boolean completed) {
-	    if (this.taskStatus == TaskCompletion.COMPLETED) {
-	        return;
-	    }
+
+	    if (this.taskStatus == TaskCompletion.COMPLETED) return;
 
 	    if (completed && this.remainingPomodoros > 0) {
+
 	        this.remainingPomodoros--;
+
+	        int damage = getDamagePerSession();
+	        applyDamage(damage);
+
+	        System.out.println("Damage: " + damage + " | Difficulty: " + difficulty);
+	    }
+
+	    if (this.remainingPomodoros == 0 || this.currentHP == 0) {
+	        this.taskStatus = TaskCompletion.COMPLETED;
 	    }
 	}
 	public void applyDamage(int damage) {
-		 if (this.taskStatus == TaskCompletion.COMPLETED) {
-		        return;
-		    }
-		this.currentHP-=damage;
-		if(this.currentHP<0)
-			this.currentHP=0;
-		if(this.currentHP==0)
-			this.taskStatus=TaskCompletion.COMPLETED;
+	    if (this.taskStatus == TaskCompletion.COMPLETED) return;
+
+	    this.currentHP -= damage;
+
+	    if (this.currentHP < 0) {
+	        this.currentHP = 0;
+	    }
+
+	}
+	public int getDamagePerSession() {
+		int base;
+		if(this.difficulty==null)
+			base=100;
+		else {
+			switch(this.difficulty.toUpperCase()) {
+			case "EASY":
+				base=110;
+				break;
+			case "HARD":
+				base=90;
+				break;
+			default:
+				base=100;
+			}
+			
+		}
+		double progressFactor=1.0;
+		if(this.estimatedPomodoros>0) {
+			progressFactor+=0.4*((double)this.remainingPomodoros/this.estimatedPomodoros);
+		}
+		int randomBoost=new java.util.Random().nextInt(21)-10;
+		int damage=(int)(base*progressFactor)+randomBoost;
+		if(damage<50)damage=50;
+		if(damage>175)damage=175;
+		return damage;
 	}
 
 	public LocalDateTime getCreatedAt() {
