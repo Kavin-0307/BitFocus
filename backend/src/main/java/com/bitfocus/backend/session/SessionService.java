@@ -68,12 +68,9 @@ public class SessionService {
 		session.setDurationSeconds((int)duration);
 		sessionRepository.save(session);
 		sessionRepository.save(session);
-		if (!session.isPomodoroApplied() && session.isCompleted()) {
-		    task.applyPomodoro(true);
-		    session.setPomodoroApplied(true);
-		}
+		
 		int damage=gameService.calculateDamage(session);
-		Task updatedTask=gameService.applyDamage(task.getTaskId(),damage,session.isCompleted());
+		Task updatedTask=gameService.applyDamage(task.getTaskId(),damage,false);
 		if (session.isCompleted()) {
 		    updatedTask.applyPomodoro(true);
 		}

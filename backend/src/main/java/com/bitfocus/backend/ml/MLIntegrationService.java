@@ -20,6 +20,7 @@ public class MLIntegrationService {
 		 Map<String,String> request=new HashMap<>();
 		 request.put("text", text);
 		 try {
+			 System.out.println("ML CALL → analyzeTask: " + text);
 			 return restTemplate.postForObject(ANALYZE_URL,request,Map.class);
 		 }catch (Exception e) {
 	            // fallback

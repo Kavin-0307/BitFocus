@@ -23,9 +23,18 @@ public class TaskService {
 		Task task=new Task();
 		task.setTaskTitle(request.getTaskTitle());
 		task.setTaskPriority(request.getTaskPriority());
-		Map<String, Object> ml = mlService.analyzeTask(request.getTaskTitle());
+		
+		int estimated ;
+		
 
-		int estimated = (int) ml.get("estimatedPomodoros");
+		if (request.getEstimatedPomodoros() > 0) {
+		    estimated = request.getEstimatedPomodoros();
+		} else {
+		    Map<String, Object> ml = mlService.analyzeTask(request.getTaskTitle());
+		    estimated = (int) ml.get("estimatedPomodoros");
+		}
+
+		task.setEstimatedPomodoros(estimated);
 		task.setEstimatedPomodoros(estimated);
 		task.setTaskDeadline(request.getTaskDeadline());
 		Task savedTask = taskRepository.save(task);
