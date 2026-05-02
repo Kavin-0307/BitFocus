@@ -1,10 +1,15 @@
 import spacy;
 import json;
 from spacy import displacy;
+import os
+
+BASE_DIR = os.path.dirname(__file__)
+file_path = os.path.join(BASE_DIR, "subjects-representation.json")
+
+file = open(file_path, "r")
 import numpy as np;
 nlp=spacy.load("en_core_web_md");
 
-file=open("D:\Python\subjects-representation.json",'r');
 json_file=json.load(file);
 
 def classification(subject):

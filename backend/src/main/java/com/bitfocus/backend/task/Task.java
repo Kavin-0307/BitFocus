@@ -100,23 +100,25 @@ public class Task {
 		return this.currentHP;
 	}
 	public void applyPomodoro(boolean completed) {
-	    if (this.taskStatus == TaskCompletion.COMPLETED) {
-	        return;
-	    }
+	    if (this.taskStatus == TaskCompletion.COMPLETED) return;
 
 	    if (completed && this.remainingPomodoros > 0) {
 	        this.remainingPomodoros--;
 	    }
+
+	    if (this.remainingPomodoros == 0) {
+	        this.taskStatus = TaskCompletion.COMPLETED;
+	    }
 	}
 	public void applyDamage(int damage) {
-		 if (this.taskStatus == TaskCompletion.COMPLETED) {
-		        return;
-		    }
-		this.currentHP-=damage;
-		if(this.currentHP<0)
-			this.currentHP=0;
-		if(this.currentHP==0)
-			this.taskStatus=TaskCompletion.COMPLETED;
+	    if (this.taskStatus == TaskCompletion.COMPLETED) return;
+
+	    this.currentHP -= damage;
+
+	    if (this.currentHP < 0) {
+	        this.currentHP = 0;
+	    }
+
 	}
 
 	public LocalDateTime getCreatedAt() {

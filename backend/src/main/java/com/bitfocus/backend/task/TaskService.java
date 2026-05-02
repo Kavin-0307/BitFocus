@@ -1,9 +1,11 @@
 package com.bitfocus.backend.task;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.bitfocus.backend.ml.MLIntegrationService;
 import com.bitfocus.backend.task.dtos.TaskRequestDTO;
 import com.bitfocus.backend.task.dtos.TaskResponseDTO;
 
@@ -12,14 +14,19 @@ import com.bitfocus.backend.task.dtos.TaskResponseDTO;
 @Service
 public class TaskService {
 	private final TaskRepository taskRepository;
-	public TaskService(TaskRepository taskRepository){
+	private final MLIntegrationService mlService;
+	public TaskService(TaskRepository taskRepository,MLIntegrationService mlService){
 		this.taskRepository=taskRepository;
+		this.mlService=mlService;
 	}
 	public TaskResponseDTO createTask(TaskRequestDTO request) {
 		Task task=new Task();
 		task.setTaskTitle(request.getTaskTitle());
 		task.setTaskPriority(request.getTaskPriority());
-		task.setEstimatedPomodoros(request.getEstimatedPomodoros());
+		Map<String, Object> ml = mlService.analyzeTask(request.getTaskTitle());
+
+		int estimated = (int) ml.get("estimatedPomodoros");
+		task.setEstimatedPomodoros(estimated);
 		task.setTaskDeadline(request.getTaskDeadline());
 		Task savedTask = taskRepository.save(task);
 		return convertToResponseDTO(savedTask);

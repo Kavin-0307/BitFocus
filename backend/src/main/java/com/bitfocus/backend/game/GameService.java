@@ -33,7 +33,7 @@ public class GameService {
     	if(task.getTaskStatus()==TaskCompletion.ABANDONED||task.getTaskStatus()==TaskCompletion.COMPLETED)
     		throw new IllegalArgumentException("Task not active");
     	task.applyDamage(damage);
-    	
+
     	Task updatedTask=taskRepository.save(task);
     	return updatedTask;
     }

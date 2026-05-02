@@ -74,6 +74,9 @@ public class SessionService {
 		}
 		int damage=gameService.calculateDamage(session);
 		Task updatedTask=gameService.applyDamage(task.getTaskId(),damage,session.isCompleted());
+		if (session.isCompleted()) {
+		    updatedTask.applyPomodoro(true);
+		}
 		return taskService.getTaskById(updatedTask.getTaskId());
 	}
 }
