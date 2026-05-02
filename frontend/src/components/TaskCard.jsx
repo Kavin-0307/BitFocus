@@ -84,7 +84,7 @@ const TaskCard = ({ task, onUpdate }) => {
             ></div>
 
             <div className="relative z-10 space-y-6">
-                {/* Battle Stage (Restored Orientation: Hero Left, Boss Right) */}
+                {/* Battle Stage (Fixed Orientation: Hero Left, Boss Right) */}
                 <div className={`battle-stage ${combatState === 'hurt' ? 'battle-shake' : ''}`}>
                     {/* HERO on the left */}
                     <div className="flex flex-col items-center gap-2">
@@ -108,17 +108,22 @@ const TaskCard = ({ task, onUpdate }) => {
                 </div>
 
                 {/* Header Info */}
-                <div className="flex justify-between items-start">
+                <div className="space-y-4">
                     <div className="space-y-1">
                         <h3 className="text-2xl font-black text-white font-outfit tracking-tight leading-none">{task.taskTitle}</h3>
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-wrap gap-2 pt-2">
                             <span 
-                                className="text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded border"
+                                className="text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border"
                                 style={{ color: getDifficultyColor(task.difficulty), borderColor: `${getDifficultyColor(task.difficulty)}33`, backgroundColor: `${getDifficultyColor(task.difficulty)}08` }}
                             >
                                 {task.difficulty} THREAT
                             </span>
-                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{task.topic} • {task.type}</span>
+                            <span className="text-[8px] font-black text-cyan-400 uppercase tracking-widest px-3 py-1 rounded-lg bg-cyan-400/5 border border-cyan-400/20">
+                                SUBJECT: {task.topic || 'GENERAL'}
+                            </span>
+                            <span className="text-[8px] font-black text-violet-400 uppercase tracking-widest px-3 py-1 rounded-lg bg-violet-400/5 border border-violet-400/20">
+                                TYPE: {task.type || 'GENERAL'}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -129,10 +134,10 @@ const TaskCard = ({ task, onUpdate }) => {
                 <div className="flex items-center justify-between pt-4 border-t border-white/5">
                     <div className="flex items-center gap-6">
                         <div className="space-y-1">
-                            <div className="text-[9px] font-black text-slate-600 uppercase tracking-widest">Energy</div>
+                            <div className="text-[9px] font-black text-slate-600 uppercase tracking-widest">Energy Required</div>
                             <div className="flex gap-1.5">
                                 {Array.from({length: task.estimatedPomodoros}).map((_, i) => (
-                                    <div key={i} className={`w-1.5 h-1.5 rounded-full ${i < (task.estimatedPomodoros - task.remainingPomodoros) ? 'bg-violet-500' : 'bg-white/10'}`}></div>
+                                    <div key={i} className={`w-1.5 h-1.5 rounded-full ${i < (task.estimatedPomodoros - task.remainingPomodoros) ? 'bg-violet-500 shadow-[0_0_8px_#8b5cf6]' : 'bg-white/10'}`}></div>
                                 ))}
                             </div>
                         </div>

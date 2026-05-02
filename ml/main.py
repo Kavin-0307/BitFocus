@@ -1,9 +1,19 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
+from fastapi.middleware.cors import CORSMiddleware
 from services.nlp import analyze_task
 
 app = FastAPI()
+
+# Enable CORS for the Frontend (5173)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # Allow all origins for the hackathon
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class TaskRequest(BaseModel):
     text: str
@@ -19,12 +29,10 @@ class RecommendRequest(BaseModel):
 
 @app.post("/analyze-task")
 async def analyze(req: TaskRequest):
-    # Call analyze_task safely from services/nlp.py
     try:
         result = analyze_task(req.text)
         return result
     except Exception:
-        # Extreme fallback
         return {
             "estimatedPomodoros": 2,
             "topic": "general",
@@ -41,7 +49,6 @@ async def recommend(req: RecommendRequest):
     best_score = -1
 
     for t in req.tasks:
-        # Scoring logic
         urgency = (
             10 if t.hoursToDeadline <= 24
             else 5 if t.hoursToDeadline <= 72

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
 import ArmoryView from './components/ArmoryView';
+import FeaturesView from './components/FeaturesView';
+import BattleLogs from './components/BattleLogs';
 
 function App() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -61,6 +63,12 @@ function App() {
               BATTLES
             </button>
             <button 
+              onClick={() => setActiveTab('FEATURES')}
+              className={`transition-colors uppercase ${activeTab === 'FEATURES' ? 'text-violet-400' : 'text-slate-500 hover:text-violet-400'}`}
+            >
+              FEATURES
+            </button>
+            <button 
               onClick={() => setActiveTab('ARMORY')}
               className={`transition-colors uppercase ${activeTab === 'ARMORY' ? 'text-violet-400' : 'text-slate-500 hover:text-violet-400'}`}
             >
@@ -118,23 +126,9 @@ function App() {
           </div>
         )}
 
+        {activeTab === 'BATTLES' && <BattleLogs />}
+        {activeTab === 'FEATURES' && <FeaturesView />}
         {activeTab === 'ARMORY' && <ArmoryView />}
-
-        {activeTab === 'BATTLES' && (
-          <div className="animate-slide-up py-20 text-center">
-            <div className="glass rounded-[3rem] p-24 inline-block max-w-2xl border-dashed border-2 border-white/5">
-              <div className="text-7xl mb-8 opacity-20 grayscale">📜</div>
-              <h2 className="text-3xl font-black text-white mb-4 uppercase tracking-tighter">BATTLE LOGS UNDER CONSTRUCTION</h2>
-              <p className="text-slate-500 text-lg">Your legendary achievements in this domain are being recorded. Return soon to see your progress.</p>
-              <button 
-                onClick={() => setActiveTab('DASHBOARD')}
-                className="mt-10 px-8 py-3 rounded-xl btn-primary btn-neon text-xs font-black uppercase tracking-widest"
-              >
-                Back to Dashboard
-              </button>
-            </div>
-          </div>
-        )}
       </main>
 
       {/* Decorative Glows */}
