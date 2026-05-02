@@ -7,10 +7,7 @@ public class SessionEndRequestDTO {
     private Long sessionId;
     private Long taskId;
 
-    private LocalDateTime startTime;
     private LocalDateTime endTime;
-
-    private int durationSeconds;
 
     private boolean completed;
 
@@ -28,16 +25,8 @@ public class SessionEndRequestDTO {
         return taskId;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
     public LocalDateTime getEndTime() {
         return endTime;
-    }
-
-    public int getDurationSeconds() {
-        return durationSeconds;
     }
 
     public boolean isCompleted() {
@@ -62,16 +51,8 @@ public class SessionEndRequestDTO {
         this.taskId = taskId;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
-    }
-
-    public void setDurationSeconds(int durationSeconds) {
-        this.durationSeconds = durationSeconds;
     }
 
     public void setCompleted(boolean completed) {
