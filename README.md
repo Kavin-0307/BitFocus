@@ -25,25 +25,25 @@ BitFocus is a **full-stack productivity application** that transforms your work 
 
 ```
 BitFocus-main/
-├── backend/                          # Spring Boot application (serves everything)
+├── backend/                          
 │   └── src/main/
 │       ├── java/com/bitfocus/backend/
-│       │   ├── task/                 # Task entity, CRUD, service, controller
-│       │   ├── session/              # Focus session lifecycle management
-│       │   ├── stats/                # Aggregate productivity statistics
-│       │   ├── ml/                   # ML integration service (task analysis)
-│       │   ├── game/                 # RPG game logic utilities
-│       │   └── views/                # Vaadin views (legacy)
+│       │   ├── task/               
+│       │   ├── session/              
+│       │   ├── stats/                
+│       │   ├── ml/                 
+│       │   ├── game/                
+│       │   └── views/              
 │       └── resources/
 │           ├── application.properties
-│           └── static/               # Frontend (HTML, CSS, JS, monster.png)
+│           └── static/             
 │               ├── index.html
 │               ├── script.js
 │               ├── styles.css
 │               └── monster.png
-├── frontend/                         # Legacy standalone frontend
-├── ml/                               # ML model/scripts
-└── bitfocus/                         # Additional project files
+├── frontend/                         
+├── ml/                             
+└── bitfocus/                        
 ```
 
 **Stack:**
@@ -91,22 +91,6 @@ No configuration needed. The H2 console is accessible at:
 | JDBC URL | `jdbc:h2:mem:focusflow` |
 | Username | `sa` |
 | Password | `password` |
-
-### MySQL (Production)
-
-Replace the contents of `application.properties` with:
-
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/bitfocus
-spring.datasource.username=YOUR_USERNAME
-spring.datasource.password=YOUR_PASSWORD
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
-```
-
----
 
 ## REST API Reference
 
