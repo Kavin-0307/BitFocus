@@ -30,6 +30,11 @@ public class Session {
 	
 	@Column(name="energy_level",nullable=true)
 	private int energyLevel;
+	@Column(name = "pomodoro_applied")
+	private boolean pomodoroApplied = false;
+
+	
+	
 	public Long getSessionId() {
         return sessionId;
     }
@@ -89,6 +94,14 @@ public class Session {
     public void setEnergyLevel(int energyLevel) {
         this.energyLevel = energyLevel;
     }
+
+	public boolean isPomodoroApplied() {
+		
+		return pomodoroApplied;
+	}
+	public void setPomodoroApplied(boolean pomodoroApplied) {
+		this.pomodoroApplied=pomodoroApplied;
+	}
 	
 }
 

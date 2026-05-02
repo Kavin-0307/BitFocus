@@ -32,7 +32,9 @@ public class TaskService {
 	public void deleteTask(Long taskId) {
 	    Task task = taskRepository.findById(taskId)
 	            .orElseThrow(() -> new IllegalArgumentException("Task not found"));
-
+	    if (task.getTaskStatus() == TaskCompletion.COMPLETED) {
+	        throw new IllegalArgumentException("Cannot abandon completed task");
+	    }
 	    task.setTaskStatus(TaskCompletion.ABANDONED);
 
 	    taskRepository.save(task);
@@ -41,7 +43,18 @@ public class TaskService {
 		 return taskRepository.findAll().stream().filter(task->task.getTaskStatus()==TaskCompletion.ACTIVE).sorted((t1,t2)->Integer.compare(calculatePriorityScore(t2),calculatePriorityScore(t1))).map(this::convertToResponseDTO).toList();
 	 }
 	 
-	 
+	 public TaskResponseDTO getTaskState(Long taskId) {
+		    Task task = taskRepository.findById(taskId)
+		            .orElseThrow(() -> new IllegalArgumentException("Task not found"));
+
+		    return convertToResponseDTO(task);
+		}
+	 public List<TaskResponseDTO> getActiveTasks() {
+		    return taskRepository.findAll().stream()
+		            .filter(task -> task.getTaskStatus() == TaskCompletion.ACTIVE)
+		            .map(this::convertToResponseDTO)
+		            .toList();
+		}
 	 
 	private TaskResponseDTO convertToResponseDTO(Task task) {
 		return new TaskResponseDTO(task.getTaskId(),
@@ -55,6 +68,7 @@ public class TaskService {
 				task.getTaskStatus(),
 				task.getCreatedAt());
 	}
+	
 	private int calculatePriorityScore(Task task) {
 	    return (task.getTaskPriority() * 2)
 	            + (calculateDeadlineUrgency(task) * 5)
@@ -73,6 +87,6 @@ public class TaskService {
 	    if (hoursLeft<= 72) return 5;
 	    if (hoursLeft<= 168) return 3; 
 
-	    return 1; // far away
+	    return 1; 
 	}
 }

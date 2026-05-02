@@ -22,6 +22,7 @@ public class GameService {
     		base=100;
     	else
     		base=40;
+    	
     	int penalty=session.getInterruptionCount()*10;
     	int damage=base-penalty;
     	return Math.max(damage,10);
@@ -32,8 +33,7 @@ public class GameService {
     	if(task.getTaskStatus()==TaskCompletion.ABANDONED||task.getTaskStatus()==TaskCompletion.COMPLETED)
     		throw new IllegalArgumentException("Task not active");
     	task.applyDamage(damage);
-    	if (completed)
-    		task.applyPomodoro(true);
+    	
     	Task updatedTask=taskRepository.save(task);
     	return updatedTask;
     }
