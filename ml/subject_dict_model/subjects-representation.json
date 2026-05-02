@@ -1,0 +1,16 @@
+{
+  "categories": [
+    {
+      "id": "core_cs",
+      "aliases": ["os", "operating systems", "dbms", "computer networks"]
+    },
+    {
+      "id": "math",
+      "aliases": ["algebra", "calculus", "statistics"]
+    },
+    {
+      "id": "general",
+      "aliases": ["study", "read", "revise"]
+    }
+  ]
+}

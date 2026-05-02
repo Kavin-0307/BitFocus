@@ -4,9 +4,12 @@ import os
 
 nlp = spacy.load("en_core_web_md")
 
-BASE_DIR = os.path.dirname(__file__)
+
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 file_path = os.path.join(BASE_DIR, "subjects-representation.json")
 
+print("Loading JSON from:", file_path)  # DEBUG
 with open(file_path, "r") as f:
     json_file = json.load(f)
 

@@ -1,0 +1,18 @@
+[
+  {
+    "text": "Study CPU scheduling algorithms",
+    "estimatedPomodoros": 3
+  },
+  {
+    "text": "Revise DBMS notes",
+    "estimatedPomodoros": 2
+  },
+  {
+    "text": "Complete assignment on OS",
+    "estimatedPomodoros": 4
+  },
+  {
+    "text": "Read 5 pages of notes",
+    "estimatedPomodoros": 1
+  }
+]

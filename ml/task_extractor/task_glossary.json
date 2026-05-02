@@ -1,0 +1,6 @@
+{
+  "study": ["study", "learn", "understand"],
+  "revision": ["revise", "review", "revisit"],
+  "assignment": ["assignment", "project", "homework"],
+  "reading": ["read", "notes", "pages"]
+}
