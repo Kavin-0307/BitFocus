@@ -18,11 +18,11 @@ X = vectorizer.fit_transform(texts)
 model = RandomForestRegressor()
 model.fit(X, y)
 
-# save
+# save model
 with open("model.pkl", "wb") as f:
     pickle.dump(model, f)
 
 with open("vectorizer.pkl", "wb") as f:
     pickle.dump(vectorizer, f)
 
-print("Model trained and saved!")
+print("Model trained and saved successfully!")

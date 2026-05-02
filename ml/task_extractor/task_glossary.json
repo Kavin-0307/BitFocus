@@ -1,6 +1,16 @@
 {
-  "study": ["study", "learn", "understand"],
-  "revision": ["revise", "review", "revisit"],
-  "assignment": ["assignment", "project", "homework"],
-  "reading": ["read", "notes", "pages"]
+  "tasks": [
+    {
+      "id": "study",
+      "aliases": ["study", "learn"]
+    },
+    {
+      "id": "revision",
+      "aliases": ["revise", "review"]
+    },
+    {
+      "id": "assignment",
+      "aliases": ["assignment", "project"]
+    }
+  ]
 }

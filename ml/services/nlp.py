@@ -61,7 +61,7 @@ def analyze_task(text):
     # ---- ML ----
     try:
         ml_est = ml_estimate(text)
-    except:
+    except Exception:
         ml_est = rule_est
 
     # ---- FUSION ----
