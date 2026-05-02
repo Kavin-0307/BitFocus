@@ -40,7 +40,22 @@ public class MLIntegrationService {
 
 		        String topic = response != null ? (String) response.get("topic") : null;
 		        String type = response != null ? (String) response.get("type") : null;
-		        String difficulty = response != null ? (String) response.get("difficulty") : null;
+		        String difficultyRaw = response != null ? (String) response.get("difficulty") : null;
+
+		        String difficulty = "MEDIUM"; // default
+
+		        if (difficultyRaw != null) {
+		            switch (difficultyRaw.toUpperCase()) {
+		                case "LOW":
+		                    difficulty = "EASY";
+		                    break;
+		                case "HIGH":
+		                    difficulty = "HARD";
+		                    break;
+		                default:
+		                    difficulty = "MEDIUM";
+		            }
+		        }
 
 		        TaskAnalysisResponse result =
 		                new TaskAnalysisResponse(estimated, topic, type, difficulty);

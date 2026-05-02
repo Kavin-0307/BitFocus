@@ -26,11 +26,11 @@ public class TaskService {
 		
 		int estimated ;
 		
-
+		var ml = mlService.analyzeTask(request.getTaskTitle());
 		if (request.getEstimatedPomodoros() > 0) {
 		    estimated = request.getEstimatedPomodoros();
 		} else {
-			 var ml = mlService.analyzeTask(request.getTaskTitle());
+			
 
 	            // ❗ SAFE extraction
 	            estimated = (ml.estimatedPomodoros() != null)
@@ -39,7 +39,10 @@ public class TaskService {
 	            
 		}
 
-		
+		task.setTopic(ml.topic());
+		task.setType(ml.type());
+		task.setDifficulty(ml.difficulty());
+		estimated = Math.max(estimated, 2);
 		task.setEstimatedPomodoros(estimated);
 		task.setTaskDeadline(request.getTaskDeadline());
 		Task savedTask = taskRepository.save(task);
